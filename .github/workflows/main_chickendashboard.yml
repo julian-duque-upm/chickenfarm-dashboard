@@ -13,10 +13,9 @@ jobs:
     - name: Checkout GitHub repo
       uses: actions/checkout@v3
 
-    - name: Upload files to Azure Web App
+    - name: Deploy using Publish Profile
       uses: azure/webapps-deploy@v2
       with:
         app-name: chickendashboard
-        slot-name: production
         publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
         package: .
