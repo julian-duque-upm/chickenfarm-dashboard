@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Chicken Farm Dashboard</title>
   <link rel="stylesheet" href="style.css"/>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js" integrity="sha512-C3oS+WcmY0VvULhKvTz2H+aDJ7qEx7iFb5KhbFzKxKRYDu8O2SAVKoBiRjDEvNOL3Cbn0nQQvH67UYwplAi1Mw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
   <h1>Chicken Farm Monitoring Dashboard</h1>
@@ -30,32 +30,34 @@
   </div>
 
   <script>
-    fetch("/api/negotiate", {
-      method: "POST"
-    })
-    .then(response => response.json())
-    .then(data => {
-      const connection = new signalR.HubConnectionBuilder()
-        .withUrl(data.url, {
-          accessTokenFactory: () => data.accessToken
-        })
-        .withAutomaticReconnect()
-        .configureLogging(signalR.LogLevel.Information)
-        .build();
+    const negotiateUrl = "https://chickenfarm-func.azurewebsites.net/api/negotiate";
 
-      connection.on("newSensorData", (sensorData) => {
-        if (!sensorData) return;
-        document.getElementById("acceleration-value").textContent = `${sensorData.acceleration ?? '--'} g`;
-        document.getElementById("airquality-value").textContent = `${sensorData.airQuality ?? '--'} ppm`;
-        document.getElementById("light1-value").textContent = `${sensorData.light1 ?? '--'} lux`;
-        document.getElementById("light2-value").textContent = `${sensorData.light2 ?? '--'} lux`;
-      });
+    fetch(negotiateUrl, { method: "POST" })
+      .then(res => {
+        if (!res.ok) throw new Error("Negotiation failed");
+        return res.json();
+      })
+      .then(info => {
+        const connection = new signalR.HubConnectionBuilder()
+          .withUrl(info.url, {
+            accessTokenFactory: () => info.accessToken
+          })
+          .withAutomaticReconnect()
+          .configureLogging(signalR.LogLevel.Information)
+          .build();
 
-      connection.start()
-        .then(() => console.log("SignalR connected"))
-        .catch(err => console.error("SignalR connection error:", err));
-    })
-    .catch(err => console.error("Negotiation failed:", err));
+        connection.on("newSensorData", (data) => {
+          document.getElementById("acceleration-value").textContent = `${data.acceleration ?? '--'} g`;
+          document.getElementById("airquality-value").textContent = `${data.airQuality ?? '--'} ppm`;
+          document.getElementById("light1-value").textContent = `${data.light1 ?? '--'} lux`;
+          document.getElementById("light2-value").textContent = `${data.light2 ?? '--'} lux`;
+        });
+
+        connection.start()
+          .then(() => console.log("✅ SignalR connected"))
+          .catch(err => console.error("❌ SignalR connection error:", err));
+      })
+      .catch(err => console.error("❌ Error negotiating SignalR connection:", err));
   </script>
 </body>
 </html>
