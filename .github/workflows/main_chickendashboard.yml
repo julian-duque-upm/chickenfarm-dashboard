@@ -21,10 +21,10 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Deploy to Azure Web App using publish profile
+      - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: chickendashboard  # <-- asegúrate que coincide con el nombre real del App Service
+          app-name: chickendashboard
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_ACBD54D8E17D4A2F8F729D3BC12CE319 }}
           package: .
 
@@ -36,13 +36,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Login to Azure
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_FUNCTIONAPP_CREDENTIALS }}
-
       - name: Deploy Azure Function App
-        uses: Azure/functions-action@v1
+        uses: azure/webapps-deploy@v2
         with:
-          app-name: chickenfarm-func  # <-- este debe ser exactamente igual al nombre de tu Function App
-          package: ./azure-functions  # <-- carpeta donde están tus funciones (como blobToSignalR y negotiate)
+          app-name: chickenfarm-func
+          publish-profile: ${{ secrets.AZUREFUNCTIONAPP_PUBLISHPROFILE }}
+          package: ./azure-functions
