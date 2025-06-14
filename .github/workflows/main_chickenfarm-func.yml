@@ -32,8 +32,7 @@ jobs:
       - name: Zip the Azure Functions project
         run: |
           cd azure-functions
-          zip -r functionapp.zip .
-          mv functionapp.zip ../functionapp.zip
+          zip -r ../functionapp.zip *
           cd ..
 
       - name: Upload artifact
@@ -53,10 +52,11 @@ jobs:
           name: functionapp
           path: .
 
-      - name: Verify file and contents
-        run: |
-          ls -lh functionapp.zip
-          unzip -l functionapp.zip
+      - name: List downloaded files
+        run: ls -lh
+
+      - name: Inspect contents of ZIP
+        run: unzip -l functionapp.zip
 
       - name: Deploy to Azure Function App
         uses: Azure/functions-action@v1
