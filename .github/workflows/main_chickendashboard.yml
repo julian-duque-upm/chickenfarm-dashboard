@@ -21,13 +21,9 @@ jobs:
     - name: Install dependencies
       run: npm install
 
-    - name: Login to Azure
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-    - name: Deploy to Azure Web App
+    - name: Deploy to Azure Web App using publish profile
       uses: azure/webapps-deploy@v2
       with:
-        app-name: chickendashboard  # ← Reemplaza con tu nombre exacto si es distinto
+        app-name: chickendashboard  # ← asegúrate de que es el nombre exacto de tu App Service
+        publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_ACBD54D8E17D4A2F8F729D3BC12CE319 }}
         package: .
