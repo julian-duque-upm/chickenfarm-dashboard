@@ -1,7 +1,18 @@
 {
-  "type": "signalR",
-  "name": "signalRMessages",
-  "hubName": "updates",
-  "connectionStringSetting": "AzureSignalRConnectionString",
-  "direction": "out"
+  "bindings": [
+    {
+      "name": "inputBlob",
+      "type": "blobTrigger",
+      "direction": "in",
+      "path": "chickencontainer/{name}.json",
+      "connection": "AzureWebJobsStorage"
+    },
+    {
+      "type": "signalR",
+      "name": "signalRMessages",
+      "hubName": "updates",
+      "connectionStringSetting": "AzureSignalRConnectionString",
+      "direction": "out"
+    }
+  ]
 }
