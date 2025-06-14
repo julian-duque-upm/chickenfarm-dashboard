@@ -30,24 +30,32 @@
   </div>
 
   <script>
-    const connection = new signalR.HubConnectionBuilder()
-      .withUrl("https://chickensignalr.service.signalr.net/client/?hub=updates")
-      .withAutomaticReconnect()
-      .configureLogging(signalR.LogLevel.Information)
-      .build();
+    fetch("/api/negotiate", {
+      method: "POST"
+    })
+    .then(response => response.json())
+    .then(data => {
+      const connection = new signalR.HubConnectionBuilder()
+        .withUrl(data.url, {
+          accessTokenFactory: () => data.accessToken
+        })
+        .withAutomaticReconnect()
+        .configureLogging(signalR.LogLevel.Information)
+        .build();
 
-    connection.on("newSensorData", (data) => {
-      if (!data) return;
+      connection.on("newSensorData", (sensorData) => {
+        if (!sensorData) return;
+        document.getElementById("acceleration-value").textContent = `${sensorData.acceleration ?? '--'} g`;
+        document.getElementById("airquality-value").textContent = `${sensorData.airQuality ?? '--'} ppm`;
+        document.getElementById("light1-value").textContent = `${sensorData.light1 ?? '--'} lux`;
+        document.getElementById("light2-value").textContent = `${sensorData.light2 ?? '--'} lux`;
+      });
 
-      document.getElementById("acceleration-value").textContent = `${data.acceleration ?? '--'} g`;
-      document.getElementById("airquality-value").textContent = `${data.airQuality ?? '--'} ppm`;
-      document.getElementById("light1-value").textContent = `${data.light1 ?? '--'} lux`;
-      document.getElementById("light2-value").textContent = `${data.light2 ?? '--'} lux`;
-    });
-
-    connection.start()
-      .then(() => console.log("SignalR connected"))
-      .catch(err => console.error("SignalR connection error:", err));
+      connection.start()
+        .then(() => console.log("SignalR connected"))
+        .catch(err => console.error("SignalR connection error:", err));
+    })
+    .catch(err => console.error("Negotiation failed:", err));
   </script>
 </body>
 </html>
