@@ -34,11 +34,39 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Deploy Azure Function App
-        uses: azure/webapps-deploy@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install Azure Function dependencies
+        run: |
+          if [ -f "azure-functions/package.json" ]; then
+            cd azure-functions
+            npm install
+            cd ..
+          fi
+
+      - name: Zip Azure Function project
+        run: |
+          cd azure-functions
+          zip -r ../functionapp.zip *
+          cd ..
+
+      - name: List ZIP contents
+        run: unzip -l functionapp.zip
+
+      - name: Deploy to Azure Function App
+        uses: Azure/functions-action@v1
         with:
           app-name: chickenfarm-func
-          publish-profile: ${{ secrets.AZUREFUNCTIONAPP_PUBLISHPROFILE }}
-          package: ./azure-functions
+          package: functionapp.zip
+          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
+
+      - name: Ping Function App endpoint
+        run: |
+          echo "Waiting 10 seconds to ensure deployment..."
+          sleep 10
+          curl -i https://chickenfarm-func.azurewebsites.net/api/negotiate
