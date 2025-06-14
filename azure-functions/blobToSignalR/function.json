@@ -1,0 +1,18 @@
+{
+  "bindings": [
+    {
+      "type": "blobTrigger",
+      "name": "myBlob",
+      "direction": "in",
+      "path": "chickencontainer/{name}",
+      "connection": "AzureWebJobsStorage"
+    },
+    {
+      "type": "signalR",
+      "name": "signalRMessages",
+      "direction": "out",
+      "hubName": "dashboard",
+      "connectionStringSetting": "AzureSignalRConnectionString"
+    }
+  ]
+}
