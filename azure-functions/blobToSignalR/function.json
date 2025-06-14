@@ -1,24 +1,7 @@
 {
-  "bindings": [
-    {
-      "type": "httpTrigger",
-      "name": "req",
-      "methods": ["post"],
-      "route": "negotiate",
-      "authLevel": "anonymous",
-      "direction": "in"
-    },
-    {
-      "type": "http",
-      "name": "res",
-      "direction": "out"
-    },
-    {
-      "type": "signalRConnectionInfo",
-      "name": "signalRConnectionInfo",
-      "hubName": "updates",
-      "connectionStringSetting": "AzureSignalRConnectionString",
-      "direction": "in"
-    }
-  ]
+  "type": "signalR",
+  "name": "signalRMessages",
+  "hubName": "updates",
+  "connectionStringSetting": "AzureSignalRConnectionString",
+  "direction": "out"
 }
