@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Chicken Farm Dashboard</title>
   <link rel="stylesheet" href="style.css"/>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js" integrity="sha512-C3oS+WcmY0VvULhKvTz2H+aDJ7qEx7iFb5KhbFzKxKRYDu8O2SAVKoBiRjDEvNOL3Cbn0nQQvH67UYwplAi1Mw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <!-- ✅ Versión 6.0.0 de SignalR -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.0/signalr.min.js"></script>
 </head>
 <body>
   <h1>Chicken Farm Monitoring Dashboard</h1>
@@ -20,14 +21,12 @@
       <p id="airquality-value">-- ppm</p>
     </div>
     <div class="sensor-card">
-      <h2>Light Sensor 1</h2>
+      <h2>Light Sensor</h2>
       <p id="light1-value">-- lux</p>
     </div>
-    <div class="sensor-card">
-      <h2>Light Sensor 2</h2>
-      <p id="light2-value">-- lux</p>
-    </div>
   </div>
+
+  <div id="status"></div>
 
   <script>
     const negotiateUrl = "https://chickenfarm-func.azurewebsites.net/api/negotiate";
@@ -47,17 +46,27 @@
           .build();
 
         connection.on("newSensorData", (data) => {
+          console.log("📡 Data received:", data);
+
           document.getElementById("acceleration-value").textContent = `${data.acceleration ?? '--'} g`;
           document.getElementById("airquality-value").textContent = `${data.airQuality ?? '--'} ppm`;
           document.getElementById("light1-value").textContent = `${data.light1 ?? '--'} lux`;
-          document.getElementById("light2-value").textContent = `${data.light2 ?? '--'} lux`;
         });
 
         connection.start()
-          .then(() => console.log("✅ SignalR connected"))
-          .catch(err => console.error("❌ SignalR connection error:", err));
+          .then(() => {
+            console.log("✅ SignalR connected");
+            document.getElementById("status").textContent = "🟢 Conectado a SignalR.";
+          })
+          .catch(err => {
+            console.error("❌ SignalR connection error:", err);
+            document.getElementById("status").textContent = "❌ Error de conexión con SignalR.";
+          });
       })
-      .catch(err => console.error("❌ Error negotiating SignalR connection:", err));
+      .catch(err => {
+        console.error("❌ Error negotiating SignalR connection:", err);
+        document.getElementById("status").textContent = "❌ Error al negociar conexión con SignalR.";
+      });
   </script>
 </body>
 </html>
