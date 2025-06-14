@@ -21,10 +21,12 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Install dependencies and build
+      - name: Install dependencies (if package.json exists)
         run: |
           cd azure-functions
-          npm install || true  # por si no hay package.json
+          if [ -f "package.json" ]; then
+            npm install
+          fi
           cd ..
 
       - name: Zip the Azure Functions project
