@@ -3,9 +3,10 @@
     {
       "type": "httpTrigger",
       "name": "req",
-      "direction": "in",
+      "methods": ["post"],
+      "route": "negotiate",
       "authLevel": "anonymous",
-      "methods": ["post"]
+      "direction": "in"
     },
     {
       "type": "http",
@@ -15,7 +16,7 @@
     {
       "type": "signalRConnectionInfo",
       "name": "signalRConnectionInfo",
-      "hubName": "chickenhub",
+      "hubName": "updates",
       "connectionStringSetting": "AzureSignalRConnectionString",
       "direction": "in"
     }
