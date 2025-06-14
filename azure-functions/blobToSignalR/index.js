@@ -1,6 +1,6 @@
-module.exports = async function (context, req) {
-  const connectionInfo = await context.bindings.signalRConnectionInfo;
-  context.res = {
-    body: connectionInfo
-  };
+const signalRMessage = {
+    target: 'newSensorData',
+    arguments: [parsedSensorData]
 };
+
+context.bindings.signalRMessages = [ signalRMessage ];
