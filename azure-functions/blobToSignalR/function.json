@@ -1,18 +1,23 @@
 {
   "bindings": [
     {
-      "name": "inputBlob",
-      "type": "blobTrigger",
+      "type": "httpTrigger",
+      "name": "req",
       "direction": "in",
-      "path": "chickencontainer/{name}",
-      "connection": "AzureWebJobsStorage"
+      "authLevel": "anonymous",
+      "methods": ["post"]
     },
     {
-      "type": "signalR",
-      "direction": "out",
-      "name": "signalRMessages",
+      "type": "http",
+      "name": "res",
+      "direction": "out"
+    },
+    {
+      "type": "signalRConnectionInfo",
+      "name": "signalRConnectionInfo",
       "hubName": "chickenhub",
-      "connectionStringSetting": "AzureSignalRConnectionString"
+      "connectionStringSetting": "AzureSignalRConnectionString",
+      "direction": "in"
     }
   ]
 }
