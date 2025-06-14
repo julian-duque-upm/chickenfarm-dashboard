@@ -37,3 +37,19 @@ h1 {
     margin: 10px 0 0;
     color: #0078d4;
 }
+
+.control-panel {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.control-panel label {
+    margin: 0 15px;
+    font-size: 1.1em;
+}
+
+.control-panel button {
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+}
