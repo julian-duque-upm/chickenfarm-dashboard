@@ -6,7 +6,7 @@ const manualToggle = document.getElementById("manual-toggle");
 const fetchButton = document.getElementById("fetch-button");
 
 async function fetchSensorData() {
-  const url = "https://<your-storage-account>.blob.core.windows.net/chickencontainer/ChickenFarmMadrid/2025/06/13/11/10.json?<your-SAS-token>";
+  const url = "https://chickenfarm.blob.core.windows.net/chickencontainer/ChickenFarmMadrid/01/2025/06/13/11/28.json?sp=r&st=2025-06-14T00:51:16Z&se=2025-06-14T08:51:16Z&spr=https&sv=2024-11-04&sr=b&sig=O2%2FoQ%2B6wmOIxj6C7726iNHimwxmNgnwBfsb5rsUGKb0%3D";
 
   try {
     const response = await fetch(url);
