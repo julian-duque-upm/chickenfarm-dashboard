@@ -5,7 +5,7 @@
       "type": "httpTrigger",
       "direction": "in",
       "name": "req",
-      "methods": [ "post", "options" ],
+      "methods": ["post"],
       "route": "negotiate"
     },
     {
@@ -18,7 +18,8 @@
       "name": "connectionInfo",
       "hubName": "updates",
       "connectionStringSetting": "AzureSignalRConnectionString",
-      "direction": "out"
+      "direction": "in"
     }
-  ]
+  ],
+  "scriptFile": "index.js"
 }
