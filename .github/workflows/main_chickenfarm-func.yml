@@ -23,13 +23,13 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Install dependencies (if package.json exists)
+      - name: Install Azure Function dependencies (if package.json exists)
         run: |
-          cd azure-functions
-          if [ -f "package.json" ]; then
+          if [ -f "azure-functions/package.json" ]; then
+            cd azure-functions
             npm install
+            cd ..
           fi
-          cd ..
 
       - name: Zip Azure Function project
         run: |
@@ -37,7 +37,7 @@ jobs:
           zip -r ../functionapp.zip *
           cd ..
 
-      - name: List ZIP content
+      - name: List ZIP contents (debug)
         run: unzip -l functionapp.zip
 
       - name: Deploy to Azure Function App
