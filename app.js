@@ -11,4 +11,4 @@ connection.on("newSensorData", (data) => {
 });
 
 connection.start().catch(err => console.error("SignalR Connection Error: ", err));
-//test
+//tests
