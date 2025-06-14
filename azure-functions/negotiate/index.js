@@ -1,5 +1,7 @@
-module.exports = async function (context, req) {
+module.exports = async function (context, req, connectionInfo) {
+    context.log("🔌 Negotiate endpoint hit");
+
     context.res = {
-        body: context.bindings.connectionInfo
+        body: connectionInfo
     };
 };
