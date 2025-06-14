@@ -1,33 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chicken Farm Dashboard</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chicken Farm Dashboard</title>
+  <link rel="stylesheet" href="style.css"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
 </head>
 <body>
-    <h1>Chicken Farm Monitoring Dashboard</h1>
+  <h1>Chicken Farm Monitoring Dashboard</h1>
 
-    <div class="dashboard-grid">
-        <div class="sensor-card">
-            <h2>Acceleration</h2>
-            <p id="acceleration-value">-- g</p>
-        </div>
-        <div class="sensor-card">
-            <h2>Air Quality</h2>
-            <p id="airquality-value">-- ppm</p>
-        </div>
-        <div class="sensor-card">
-            <h2>Light Sensor 1</h2>
-            <p id="light1-value">-- lux</p>
-        </div>
-        <div class="sensor-card">
-            <h2>Light Sensor 2</h2>
-            <p id="light2-value">-- lux</p>
-        </div>
+  <div class="dashboard-grid">
+    <div class="sensor-card">
+      <h2>Acceleration</h2>
+      <p id="acceleration-value">-- g</p>
     </div>
+    <div class="sensor-card">
+      <h2>Air Quality</h2>
+      <p id="airquality-value">-- ppm</p>
+    </div>
+    <div class="sensor-card">
+      <h2>Light Sensor 1</h2>
+      <p id="light1-value">-- lux</p>
+    </div>
+    <div class="sensor-card">
+      <h2>Light Sensor 2</h2>
+      <p id="light2-value">-- lux</p>
+    </div>
+  </div>
 
-    <script src="app.js"></script>
+  <script>
+    const connection = new signalR.HubConnectionBuilder()
+      .withUrl("https://chickensignalr.service.signalr.net/client/?hub=updates")
+      .withAutomaticReconnect()
+      .configureLogging(signalR.LogLevel.Information)
+      .build();
+
+    connection.on("newSensorData", (data) => {
+      if (!data) return;
+
+      document.getElementById("acceleration-value").textContent = `${data.acceleration ?? '--'} g`;
+      document.getElementById("airquality-value").textContent = `${data.airQuality ?? '--'} ppm`;
+      document.getElementById("light1-value").textContent = `${data.light1 ?? '--'} lux`;
+      document.getElementById("light2-value").textContent = `${data.light2 ?? '--'} lux`;
+    });
+
+    connection.start()
+      .then(() => console.log("SignalR connected"))
+      .catch(err => console.error("SignalR connection error:", err));
+  </script>
 </body>
 </html>
