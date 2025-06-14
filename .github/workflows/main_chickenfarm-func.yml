@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+    # Optional: Only trigger when function files change
+    # paths:
+    #   - 'azure-functions/**'
 
 env:
   NODE_VERSION: '20'
@@ -15,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Node.js
@@ -23,7 +26,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Install Azure Function dependencies (if package.json exists)
+      - name: Install dependencies (if package.json exists)
         run: |
           if [ -f "azure-functions/package.json" ]; then
             cd azure-functions
@@ -49,7 +52,14 @@ jobs:
 
       - name: Ping Function App endpoint
         run: |
-          echo "Esperando 10 segundos para asegurar despliegue..."
+          echo "Waiting 10 seconds to allow deployment to finish..."
           sleep 10
-          echo "Haciendo ping a ${{ env.FUNCTION_ENDPOINT }}"
-          curl -i ${{ env.FUNCTION_ENDPOINT }}
+          echo "Pinging ${{ env.FUNCTION_ENDPOINT }}..."
+          http_response=$(curl -s -o /dev/null -w "%{http_code}" "${{ env.FUNCTION_ENDPOINT }}")
+          echo "HTTP status code: $http_response"
+          if [ "$http_response" -ne 200 ]; then
+            echo "❌ Function did not return 200 OK"
+            exit 1
+          else
+            echo "✅ Function is live and responding"
+          fi
