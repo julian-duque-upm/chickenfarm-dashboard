@@ -1,16 +1,8 @@
-module.exports = async function (context, myBlob) {
-    const blobContent = myBlob.toString();
-    let parsedData;
+module.exports = async function (context, inputBlob) {
+  const data = JSON.parse(inputBlob);
 
-    try {
-        parsedData = JSON.parse(blobContent);
-    } catch (err) {
-        context.log("Invalid JSON in blob");
-        return;
-    }
-
-    context.bindings.signalRMessages = [{
-        target: "newSensorData",
-        arguments: [parsedData]
-    }];
+  context.bindings.signalRMessages = [{
+    target: 'newSensorData',
+    arguments: [data]
+  }];
 };
