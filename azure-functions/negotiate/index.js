@@ -1,5 +1,5 @@
-module.exports = async function (context, req, connectionInfo) {
-  context.res = {
-    body: connectionInfo
-  };
+module.exports = async function (context, req) {
+    context.res = {
+        body: context.bindings.connectionInfo
+    };
 };
