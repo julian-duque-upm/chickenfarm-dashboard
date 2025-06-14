@@ -8,6 +8,7 @@
 </head>
 <body>
     <h1>Chicken Farm Monitoring Dashboard</h1>
+
     <div class="dashboard-grid">
         <div class="sensor-card">
             <h2>Acceleration</h2>
@@ -26,6 +27,19 @@
             <p id="light2-value">-- lux</p>
         </div>
     </div>
+
+    <div class="control-panel">
+        <label>
+            <input type="checkbox" id="auto-toggle">
+            Auto Update
+        </label>
+        <label>
+            <input type="checkbox" id="manual-toggle">
+            Manual Update
+        </label>
+        <button id="fetch-button" disabled>Fetch Data</button>
+    </div>
+
     <script src="app.js"></script>
 </body>
 </html>
